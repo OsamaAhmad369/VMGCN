@@ -125,10 +125,10 @@ def load_adj_from_numpy(numpy_file):
 def get_dataset_info(dataset):
     base_dir = os.getcwd() + '/data/'
     d = {
-         'CA': [base_dir+'CA', base_dir+'ca/ca_rn_adj.npy', 8600],
-         'GLA': [base_dir+'GLA', base_dir+'gla/gla_rn_adj.npy', 3834],
-         'GBA': [base_dir+'GBA', base_dir+'gba/gba_rn_adj.npy', 2352],
-         'SD': [base_dir+'SD', base_dir+'sd/sd_rn_adj.npy', 716],
+         'CA': [base_dir+'CA', base_dir+'CA/ca_rn_adj.npy', 8600],
+         'GLA': [base_dir+'GLA', base_dir+'GLA/gla_rn_adj.npy', 3834],
+         'GBA': [base_dir+'GBA', base_dir+'GBA/gba_rn_adj.npy', 2352],
+         'SD': [base_dir+'SD', base_dir+'SD/sd_rn_adj.npy', 716],
         }
     assert dataset in d.keys()
     return d[dataset]
