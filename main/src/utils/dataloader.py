@@ -6,7 +6,7 @@ import threading
 import multiprocessing as mp
 
 class DataLoader(object):
-    def __init__(self, data, idx, seq_len, horizon, bs, logger, pad_last_sample=False):
+    def __init__(self, data, idx, seq_len, horizon, bs, logger,input_dim,feature,pad_last_sample=False):
         if pad_last_sample:
             num_padding = (bs - (len(idx) % bs)) % bs
             idx_padding = np.repeat(idx[-1:], num_padding, axis=0)
@@ -14,6 +14,8 @@ class DataLoader(object):
         
         self.data = data
         self.idx = idx
+        self.feature=feature
+        self.input_dim=input_dim
         self.size = len(idx)
         self.bs = bs
         self.num_batch = int(self.size // self.bs)
@@ -35,7 +37,7 @@ class DataLoader(object):
     def write_to_shared_array(self, x, y, idx_ind, start_idx, end_idx):
         for i in range(start_idx, end_idx):
            
-            x[i] = self.data[idx_ind[i] + self.x_offsets, :, args.feature:]  
+            x[i] = self.data[idx_ind[i] + self.x_offsets, :, self.feature:]  
             y[i] = self.data[idx_ind[i] + self.y_offsets, :, :1]
         
     def get_iterator(self):
@@ -47,7 +49,7 @@ class DataLoader(object):
                 end_ind = min(self.size, self.bs * (self.current_ind + 1))
                 idx_ind = self.idx[start_ind: end_ind, ...]
                 
-                x_shape = (len(idx_ind), self.seq_len, self.data.shape[1], args.input_dim-args.feature)
+                x_shape = (len(idx_ind), self.seq_len, self.data.shape[1], self.input_dim-self.feature)
                 x_shared = mp.RawArray('f', int(np.prod(x_shape)))
                 x = np.frombuffer(x_shared, dtype='f').reshape(x_shape)
                   
@@ -97,7 +99,7 @@ def load_dataset(data_path, args, logger):
     for cat in ['train', 'val', 'test']:
         idx = np.load(os.path.join(data_path, args.years, 'idx_' + cat + '.npy'))
         dataloader[cat + '_loader'] = DataLoader(ptr['data'][..., :args.input_dim], idx, \
-                                                 args.seq_len, args.horizon, args.bs, logger)
+                                                 args.seq_len, args.horizon, args.bs, logger,args.input_dim,args.feature)
         
 
     scaler = StandardScaler(mean=ptr['mean'], std=ptr['std'])
