@@ -42,23 +42,16 @@ class ASTGCN_block(nn.Module):
 
     def forward(self, x):
         bs, node_num, feature_num, seq_len = x.shape
-        # print(x.shape)
-        # print(x[:,:,2:,:].shape)
         x1=x.clone().to(x.device)
         channel_At=self.CAt(x1[:,:,2:,:])
         x1[:,:,2:,:] = torch.matmul(x1[:,:,2:,:].reshape(bs, -1, feature_num-2), channel_At).reshape(bs, node_num, feature_num-2, seq_len)
-        # print(x.shape)
         temporal_At = self.TAt(x)
         x_TAt = torch.matmul(x.reshape(bs, -1, seq_len), temporal_At).reshape(bs, node_num, feature_num, seq_len)
         spatial_At = self.SAt(x_TAt)
         x_new=x.clone().to(x.device)
         x_new[:,:,2:,:]=x1[:,:,2:,:]+x[:,:,2:,:]
-        # print(x_new.shape)
-        
         spatial_gcn = self.cheb_conv_SAt(x_new, spatial_At)
-   
         time_conv_output = self.time_conv(spatial_gcn.permute(0, 2, 1, 3))
-
         x_residual = self.residual_conv(x_new.permute(0, 2, 1, 3))
         x_residual = self.ln(F.relu(x_residual + time_conv_output).permute(0, 3, 2, 1)).permute(0, 2, 3, 1)
         return x_residual
@@ -76,32 +69,14 @@ class Channel_Attention_layer(nn.Module):
 
 
     def forward(self, x):
-        # print(x.shape)
         _, node_num, feature_num, seq_len = x.shape
-        # print(x.shape)
         lhs = torch.matmul(torch.matmul(x.permute(0, 2, 1, 3), self.V1), self.V2)
-        # print(self.V3.shape, x.permute(0,3,1,2).shape)
         rhs = torch.matmul(self.V3, x.permute(0,3,1,2))
-        # print(lhs.shape,rhs.shape)
         product = torch.matmul(lhs, rhs)
-
         C = torch.matmul(self.Ve, torch.sigmoid(product + self.be))
-        # plt.figure(figsize=(10,8))
-        # sns.heatmap(C[0,:,:].detach().cpu(),cmap='crest',annot=True,vmin=-1.5,vmax=3.0)
-        # plt.savefig('\home\ee\Thesis\plt.png')
-        # plt.show()
-        # torch.sign(C)*
         zero_array=torch.zeros((C.shape[0],C.shape[1],C.shape[2])).to(x.device)
         C=torch.sign(C)*torch.maximum(torch.abs(C)-self.thres,zero_array)
         C_normalized = F.softmax(C, dim=1)
-        # plt.figure(figsize=(10,8))
-        # sns.heatmap(C[0,:,:].detach().cpu(),cmap='crest',annot=True,vmin=-1.5,vmax=3.0)
-        # plt.savefig('\home\ee\Thesis\plt.png')
-        # plt.show()
-        # print(self.thres)
-        # attention=(C_normalized[0,:,:]-C_normalized[0,:,:].min())/(C_normalized[0,:,:].max()-C_normalized[0,:,:].min())
-        
-        
         return C_normalized
     
 class Temporal_Attention_layer(nn.Module):
@@ -119,7 +94,6 @@ class Temporal_Attention_layer(nn.Module):
         lhs = torch.matmul(torch.matmul(x.permute(0, 3, 2, 1), self.U1), self.U2)
         rhs = torch.matmul(self.U3, x)
         product = torch.matmul(lhs, rhs)
-
         E = torch.matmul(self.Ve, torch.sigmoid(product + self.be))
         E_normalized = F.softmax(E, dim=1)
         return E_normalized
@@ -139,7 +113,6 @@ class Spatial_Attention_layer(nn.Module):
         lhs = torch.matmul(torch.matmul(x, self.W1), self.W2)
         rhs = torch.matmul(self.W3, x).transpose(-1, -2)
         product = torch.matmul(lhs, rhs)
-
         S = torch.matmul(self.Vs, torch.sigmoid(product + self.bs))
         S_normalized = F.softmax(S, dim=1)
         return S_normalized
