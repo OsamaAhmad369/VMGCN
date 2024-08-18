@@ -14,6 +14,7 @@ def get_public_config():
     parser.add_argument('--seq_len', type=int, default=12)
     parser.add_argument('--horizon', type=int, default=12)
     parser.add_argument('--input_dim', type=int, default=3)
+    parser.add_argument('--filename', type=str)
     parser.add_argument('--feature', type=int, default=1,help='Use all features including main signal set 0, otherwise to remove main signal set 1') 
     parser.add_argument('--output_dim', type=int, default=1)
 
