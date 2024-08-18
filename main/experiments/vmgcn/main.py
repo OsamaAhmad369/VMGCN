@@ -37,7 +37,7 @@ def get_config():
     parser.add_argument('--clip_grad_value', type=float, default=5)
     args = parser.parse_args()
 
-    log_dir = './experiments/{}/{}/'.format(args.model_name, args.dataset)
+    log_dir = './experiments/{}/{}/'.format('vmgcn', args.dataset)
     logger = get_logger(log_dir, __name__, 'record_s{}.log'.format(args.seed))
     logger.info(args)
     
