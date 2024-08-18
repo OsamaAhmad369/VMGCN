@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(__file__ + '/../../..'))
 import torch
 torch.set_num_threads(3)
 
-from src.models.3d_astgcn import ASTGCN
+from src.models.astgcn3d import ASTGCN
 from src.engines.astgcn_engine import ASTGCN_Engine
 from src.utils.args import get_public_config
 from src.utils.dataloader import load_dataset, load_adj_from_numpy, get_dataset_info
