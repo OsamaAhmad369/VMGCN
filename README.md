@@ -10,7 +10,7 @@ Note:
 Please cite all reference papers, if you find these papers useful in your research.
 
 ## Preprocessing 
-
+To preprocessing the raw data, please refer to github repo [Link](https://github.com/liuxu77/LargeST). And set the sampling time for 15 minutes during preprocessing.
 ## Main Code
 The main architecture consists of two main compoenents: decomposition of spatiotemporal data and deep neural network:
 
