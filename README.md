@@ -3,8 +3,7 @@ This repository is based on traffic forecasting on the LargeST: A Benchmark Data
 
 You can download all data from the provided [link](https://www.kaggle.com/datasets/liuxu77/largest).
 
-The Variational Mode Decomposition method is proposed by Konstantin Dragomiretskiy and Dominique Zosso  [Link](https://ieeexplore.ieee.org/document/6655981) to determine the modes of the signals. Vmd tool in Numpy 
-vmdpy [Link](https://github.com/vrcarva/vmdpy) is used in our code. The paper link for this tool is [Link](https://www.sciencedirect.com/science/article/pii/S1746809420302299?via%3Dihub).
+The Variational Mode Decomposition method is proposed by Konstantin Dragomiretskiy and Dominique Zosso  [Link](https://ieeexplore.ieee.org/document/6655981) to determine the modes of the signals. Vmdpy tool in Numpy [Link](https://github.com/vrcarva/vmdpy) is used in our code. The paper link for this tool is [Link](https://www.sciencedirect.com/science/article/pii/S1746809420302299?via%3Dihub).
 
 Note:
 
@@ -20,19 +19,26 @@ The data for decomposition is arranged in the order of (time, nodes, features). 
 ```
 python main/preprocessing/vmd.py --dataset SD --years 2019 --f his.npz --alpha 2000 --K 13 --tol 1e-7 --DC 0 --init 1 --tau 0
 ```
-
 ### 2. Neural Network 
+Currently, there are total 2 supported codes available in this repository, VMGCN (vmgcn) and VMGCN with 3D attention (3d_vmgcn). We use the flow data from 2019 in our training and evaluation in our paper.  The backbone of the deep neural network is based on [ASTGCN](https://github.com/guoshnBJTU/ASTGCN-2019-pytorch).
 
 #### Training 
+
+
+Execute the Python file in the terminal
+
+To run the VMGCN,
 ```
-python main/experiments/vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --filename his.npz
+python main/experiments/vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --filename his_vmd.npz
 ```
 
+To run the VMGCN with channel attention,
 ```
-python main/experiments/3d_vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --filename his.npz
+python main/experiments/3d_vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --filename his_vmd.npz
 ```
 #### Evaluation
+We evaluate MAE, RMSE, and MAPE error metrics on prediction horizons 1 to 12. 
 
 ```
-python main/experiments/3d_vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --mode test --filename his.npz
+python main/experiments/3d_vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --mode test --filename his_vmd.npz
 ```
