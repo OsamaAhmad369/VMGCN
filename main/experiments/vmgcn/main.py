@@ -64,7 +64,7 @@ def main():
     cheb_poly = [torch.from_numpy(i).type(torch.FloatTensor).to(device) for i in calculate_cheb_poly(L_tilde, args.order)] 
     dataloader, scaler = load_dataset(data_path, args, logger)
     model = ASTGCN(node_num=node_num,
-                   input_dim=args.input_dim,
+                   input_dim=args.input_dim-args.feature,
                    output_dim=args.output_dim,
                    device=args.device,
                    cheb_poly=cheb_poly,
