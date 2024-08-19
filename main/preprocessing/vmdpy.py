@@ -166,6 +166,7 @@ if __name__ == "__main__":
     parser.add_argument("--DC", type=float, default=0, help="Value for DC")
     parser.add_argument("--init", type=float, default=1, help="Value for init")
     parser.add_argument("--tol", type=float, default=1e-7, help="Value for tol")
+    parser.add_argument("--sigma", type=float, default=1e-7, help="standard deviation value")
 
     args = parser.parse_args()
 
@@ -175,7 +176,7 @@ if __name__ == "__main__":
     data=data2['data']
     data_vmd=np.zeros((data.shape[0],data.shape[1],data.shape[2]+args.K))
     for sensor in range(data.shape[1]):
-        signal=data[:,sensor,0]
+        signal=data[:,sensor,0]+np.random.normal(0,args.sigma,data[:,sensor,0].shape)
         data_vmd[:,sensor,:3]=data[:,sensor,:3]
         u, u_hat, omega = VMD(signal, args.alpha, args.tau, args.K, args.DC, args.init, args.tol)
         if u.shape[0]!=args.K:
