@@ -17,7 +17,7 @@ The main architecture consists of two main compoenents: decomposition of spatiot
 ### 1. Variational Mode Decomposition (VMD)
 The data for decomposition is arranged in the order of (time, nodes, features). The features in our work are concatenated such as counts, time of the day, day of the week. The output features of this decomposition will be (counts, time of the day, day of the week, modes). 
 ```
-python main/preprocessing/vmd.py --dataset SD --years 2019 --f his.npz --alpha 2000 --K 13 --tol 1e-7 --DC 0 --init 1 --tau 0
+python main/preprocessing/vmd.py --dataset SD --years 2019 --f his.npz --alpha 2000 --K 13 --tol 1e-7 --DC 0 --init 1 --tau 0 --sigma 0.1
 ```
 ### 2. Neural Network 
 Currently, there are total 2 supported codes available in this repository, VMGCN (vmgcn) and VMGCN with 3D attention (3d_vmgcn). We use the flow data from 2019 in our training and evaluation in our paper.  The backbone of the deep neural network is based on [ASTGCN](https://github.com/guoshnBJTU/ASTGCN-2019-pytorch).
@@ -29,7 +29,7 @@ Execute the Python file in the terminal
 
 To run the VMGCN,
 ```
-python main/experiments/vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --filename his_vmd.npz
+python main/experiments/vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --filename his_vmd.npz 
 ```
 
 To run the VMGCN with channel attention,
