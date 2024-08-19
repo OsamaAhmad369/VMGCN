@@ -166,7 +166,7 @@ if __name__ == "__main__":
     parser.add_argument("--DC", type=float, default=0, help="Value for DC")
     parser.add_argument("--init", type=float, default=1, help="Value for init")
     parser.add_argument("--tol", type=float, default=1e-7, help="Value for tol")
-    parser.add_argument("--sigma", type=float, default=1e-7, help="standard deviation value")
+    parser.add_argument("--sigma", type=float, default=0, help="standard deviation value")
 
     args = parser.parse_args()
 
