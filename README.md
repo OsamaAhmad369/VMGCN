@@ -42,3 +42,16 @@ We evaluate MAE, RMSE, and MAPE error metrics on prediction horizons 1 to 12.
 ```
 python main/experiments/3d_vmgcn/main.py --device cuda:0 --model_name astgcn --dataset SD --years 2019 --bs 48 --input_dim 16 --mode test --filename his_vmd.npz
 ```
+#### Citation
+If you find our work helpful in your research work, please cite:
+```
+@misc{ahmad2024variationalmodedrivengraphconvolutional,
+      title={Variational Mode-Driven Graph Convolutional Network for Spatiotemporal Traffic Forecasting}, 
+      author={Osama Ahmad and Zubair Khalid},
+      year={2024},
+      eprint={2408.16191},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2408.16191}, 
+}
+```
